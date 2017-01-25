@@ -1,9 +1,5 @@
-//TODO unused warnings from static keyword
-//V1.0.2:
-//	-Storing SMS owner number and temperature parameters in flash
-//V1.0.1:
-//	-Reply SMS only to owner, and only to correct command
-//V1.0.0 - Original version
+//V0.0.0:
+//	-original version
 
 #include "stm32f1xx_hal.h"
 #include "SX1278Drv.h"
@@ -47,9 +43,9 @@ int main(void){
 	//cfg.tx_en = &LoRaTxEnPin;
 	cfg.sleepInIdle = true;
 
-	SX1278Drv_Init(&cfg);
-	//SX1278Drv_SetAdresses(0, (uint16_t *)AddrSensors, SensorCount);
-	//SX1278Drv_SetAdresses(SensorCount, (uint16_t *)AddrRelays, RelayCount);
+ 	SX1278Drv_Init(&cfg);
+	uint16_t CoordAddress = 0;
+	SX1278Drv_SetAdresses(0, &CoordAddress, 1);
 
 	osKernelStart();
 	return 0;
@@ -127,6 +123,11 @@ static void MX_GPIO_Init(void){
 
 	GPIO_InitStruct.Pin = SPICSPin.pin;
 	HAL_GPIO_Init(SPICSPin.port, &GPIO_InitStruct);
+	int i;
+	for(i=0;i<RelayCount;i++){
+		GPIO_InitStruct.Pin = RelayPin[i].pin;
+		HAL_GPIO_Init(RelayPin[i].port, &GPIO_InitStruct);
+	}
 }
 
 void Error_Handler(void){
@@ -135,7 +136,23 @@ void Error_Handler(void){
 
 static void RxTimerCallback(void const * argument){}
 
-void SX1278Drv_LoRaRxCallback(LoRa_Message *msg){}
+void SX1278Drv_LoRaRxCallback(LoRa_Message *msg){
+	if(msg->payloadLength != 2)
+		return;
+	uint16_t state;
+	state = msg->payload[0] | (msg->payload[1]<<8);
+	memcpy((uint8_t *)&state,msg->payload,2);
+	uint8_t i;
+	for(i=0;i<RelayCount;i++){
+		GPIO_PIN_WRITE(RelayPin+i,state&(1<<i));
+	}
+
+	LoRa_Message msg2;
+	msg2.address = 0;
+	msg2.payloadLength = 1;
+	msg2.payload[0] = 1;
+	SX1278Drv_SendMessage(&msg2);
+}
 
 void SX1278Drv_LoRaRxError(){}
 

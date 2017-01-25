@@ -21,7 +21,7 @@ const uint64_t GUID[] = {
 //constant for LoRa driver
 
 const uint8_t NetworkID = 0x01;
-const uint16_t LoRaAddress = 0x0000;
+const uint16_t LoRaAddress = 0x0010;
 
 
 #endif /* MAIN_H_ */

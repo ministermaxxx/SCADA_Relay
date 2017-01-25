@@ -12,6 +12,8 @@
 
 #define RING_TIMEOUT 100
 
+#define RelayCount 3
+
 struct {
 	GPIO_TypeDef * const port;
 	uint16_t const pin;
@@ -29,6 +31,12 @@ static PinDescription SPICSPin = {GPIOA, GPIO_PIN_4, 0, 0};
 //static PinDescription LoRaTxRxPin = {GPIOC, GPIO_PIN_13, 0, 0};
 //static PinDescription LoRaRxEnPin = {GPIOC, GPIO_PIN_13, 0, 0};
 //static PinDescription LoRaTxEnPin = {GPIOA, GPIO_PIN_4, 0, 0};
+
+static PinDescription RelayPin[RelayCount] = {
+		{GPIOA, GPIO_PIN_4, 0, 0},
+		{GPIOD, GPIO_PIN_7, 0, 0},
+		{GPIOB, GPIO_PIN_3, 0, 0},
+};
 
 #define GPIO_PIN_SET(pinDesc) {HAL_GPIO_WritePin((pinDesc)->port,(pinDesc)->pin,GPIO_PIN_SET); (pinDesc)->lastState = GPIO_PIN_SET; (pinDesc)->lastEvent = HAL_GetTick();}
 #define GPIO_PIN_RESET(pinDesc) {HAL_GPIO_WritePin((pinDesc)->port,(pinDesc)->pin,GPIO_PIN_RESET); (pinDesc)->lastState = GPIO_PIN_RESET; (pinDesc)->lastEvent = HAL_GetTick();}

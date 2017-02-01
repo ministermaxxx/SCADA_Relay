@@ -21,20 +21,18 @@ struct {
 	GPIO_PinState lastState;	//последнее состо€ние
 } typedef PinDescription;
 
-struct {
-	GPIO_PinState state;
-	uint16_t pinNumber;
-} typedef MessagePinStateChange;	//»спользуетс€ в очереди
 
-static PinDescription SPICSPin = {GPIOA, GPIO_PIN_4, 0, 0};
-//static PinDescription SPICSPin = {GPIOB, GPIO_PIN_0, 0, 0};
-//static PinDescription LoRaTxRxPin = {GPIOC, GPIO_PIN_13, 0, 0};
-//static PinDescription LoRaRxEnPin = {GPIOC, GPIO_PIN_13, 0, 0};
-//static PinDescription LoRaTxEnPin = {GPIOA, GPIO_PIN_4, 0, 0};
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
+static PinDescription SPICSMyPin = {GPIOA, GPIO_PIN_4, 0, 0};
+static PinDescription SPICSPin = {GPIOB, GPIO_PIN_0, 0, 0};
+static PinDescription LoRaTxRxPin = {GPIOC, GPIO_PIN_13, 0, 0};
+static PinDescription LoRaRxEnPin = {GPIOC, GPIO_PIN_13, 0, 0};
+static PinDescription LoRaTxEnPin = {GPIOA, GPIO_PIN_4, 0, 0};
 
 static PinDescription RelayPin[RelayCount] = {
-		{GPIOA, GPIO_PIN_4, 0, 0},
-		{GPIOD, GPIO_PIN_7, 0, 0},
+		{GPIOA, GPIO_PIN_15, 0, 0},
+		{GPIOB, GPIO_PIN_4, 0, 0},
 		{GPIOB, GPIO_PIN_3, 0, 0},
 };
 

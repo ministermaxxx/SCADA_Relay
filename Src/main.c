@@ -7,6 +7,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 
+#define MySTM
 SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim1;
 osTimerId hRxTimer;
@@ -30,18 +31,24 @@ int main(void){
 	hRxTimer = osTimerCreate(osTimer(RxTimer), osTimerOnce, NULL);
 
 	cfg.bw = SX1278Drv_RegLoRaModemConfig1_BW_125;
-	cfg.cr = SX1278Drv_RegLoRaModemConfig1_CR_4_8;
-	cfg.crc = SX1278Drv_RegLoRaModemConfig2_PayloadCrc_ON;
-	cfg.frequency = 868e6;
-	cfg.hdrMode = SX1278Drv_RegLoRaModemConfig1_HdrMode_Explicit;
-	cfg.power = 17;
-	cfg.preambleLength = 20;//
-	cfg.sf = SX1278Drv_RegLoRaModemConfig2_SF_12;
-	cfg.spi = &hspi1;
-	cfg.spi_css_pin = &SPICSPin;
-	//cfg.rx_en = &LoRaRxEnPin;
-	//cfg.tx_en = &LoRaTxEnPin;
-	cfg.sleepInIdle = true;
+		cfg.cr = SX1278Drv_RegLoRaModemConfig1_CR_4_8;
+		cfg.crc = SX1278Drv_RegLoRaModemConfig2_PayloadCrc_ON;
+		cfg.hdrMode = SX1278Drv_RegLoRaModemConfig1_HdrMode_Explicit;
+		cfg.power = 17;
+		cfg.preambleLength = 20;//
+		cfg.sf = SX1278Drv_RegLoRaModemConfig2_SF_12;
+		cfg.spi = &hspi1;
+		cfg.sleepInIdle = true;
+	#ifdef MySTM
+		cfg.frequency = 434e6;
+		cfg.spi_css_pin = &SPICSMyPin;
+		cfg.tx_led = &LoRaTxRxPin;
+	#else
+		cfg.frequency = 868e6;
+		cfg.spi_css_pin = &SPICSPin;
+		cfg.rx_en = &LoRaRxEnPin;
+		cfg.tx_en = &LoRaTxEnPin;
+	#endif
 
  	SX1278Drv_Init(&cfg);
 	uint16_t CoordAddress = 0;
